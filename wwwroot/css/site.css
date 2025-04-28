@@ -20,25 +20,3 @@ html {
 body {
   margin-bottom: 60px;
 }
-.layout {
-    display: flex;
-}
-
-.week-sidebar {
-    width: 100px;
-    background: #f4f4f4;
-}
-
-.day-label {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-}
-
-.board-canvas {
-    border: 1px solid #ccc;
-    flex: 1;
-}
-
-.toolbar {
-    margin-bottom: 10px;
-}
