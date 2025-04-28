@@ -4,7 +4,7 @@ namespace teacherMgmtfront.Controllers
 {
     public class GetScheduleController : Controller
     {
-        public IActionResult Index()
+        public IActionResult GetSchedule()
         {
             return View();
         }

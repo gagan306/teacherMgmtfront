@@ -4,7 +4,7 @@ namespace teacherMgmtfront.Controllers
 {
     public class ClassSubjectsController : Controller
     {
-        public IActionResult Index()
+        public IActionResult ManageClass()
         {
             return View();
         }

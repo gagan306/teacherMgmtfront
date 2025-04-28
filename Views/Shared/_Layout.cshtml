@@ -25,7 +25,7 @@
                 </button>
 
                 <!-- Brand or Logo -->
-                <a class="navbar-brand ms-2" href="@Url.Action("Index", "Home")">MyApp</a>
+                <a class="navbar-brand ms-2" href="@Url.Action("GetSchedule", "GetSchedule")">MyApp</a>
 
                 <!-- Offcanvas Side Menu -->
                 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
@@ -36,10 +36,10 @@
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="@Url.Action("index", "Home")">Home</a>
+                                <a class="nav-link active" aria-current="page" href="@Url.Action("GetSchedule", "GetSchedule")">Schedule</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("About", "Home")">About</a>
+                                <a class="nav-link" href="@Url.Action("ManageClass", "ClassSubjects")">Classes</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a>
