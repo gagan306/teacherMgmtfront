@@ -1,4 +1,5 @@
-﻿html {
+﻿
+html {
   font-size: 14px;
 }
 
@@ -23,28 +24,28 @@ body {
 /* site.css */
 
 /* 1) Make your fg variable pure white (or whatever light color you prefer) */
-.dark-theme {
+/*.dark-theme {
     --bg: #121212;
-    --fg: #ffffff; /* ← change this to pure white */
-    --muted: #888888;
-}
+    --fg: #ffffff;*/ /* ← change this to pure white */
+    /*--muted: #888888;
+}*/
 
     /* 2) Force all elements under .dark-theme to use those vars */
-    .dark-theme,
+    /*.dark-theme,
     .dark-theme * {
         background-color: var(--bg) !important;
         color: var(--fg) !important;
         border-color: var(--muted) !important;
-    }
+    }*/
 
         /* 3) Override any Bootstrap “dark” utility classes that might conflict */
-        .dark-theme .text-dark,
+        /*.dark-theme .text-dark,
         .dark-theme .text-secondary,
         .dark-theme .text-muted {
             color: var(--fg) !important;
-        }
+        }*/
 
         /* 4) (Optional) Tweak link colors so they still stand out */
-        .dark-theme a {
+        /*.dark-theme a {
             color: #66CCFF !important;
-        }
+        }*/
