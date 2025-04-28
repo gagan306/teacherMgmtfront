@@ -1,16 +1,16 @@
 ﻿<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <div class="container mt-5">
-    <h2 class="mb-4 text-center">Class Schedule</h2>
+    <h2 class="mb-4 text-center fw-bold">Class Schedule</h2>
     <div class="table-responsive">
-        <table class="table table-bordered text-center align-middle" id="scheduleTable">
-            <thead class="table-primary">
-                <tr>
-                    <th>Day / Time</th>
+        <table class="table table-hover table-borderless align-middle text-center shadow-sm rounded" id="scheduleTable" style="overflow:hidden;">
+            <thead class="bg-light">
+                <tr class="rounded-top">
+                    <th class="bg-white text-secondary">Day / Time</th>
                     <!-- Time slots dynamically injected here -->
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="bg-white">
                 <!-- Week days and periods dynamically injected here -->
             </tbody>
         </table>
@@ -24,7 +24,7 @@
         const times = ["08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM"];
         const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-        // Simulated API call (replace this with your real API)
+        // Fake API call
         function fetchSchedule() {
             return [
                 { day: "Monday", time: "08:00 AM", subject: "Math" },
@@ -34,34 +34,33 @@
                 { day: "Wednesday", time: "08:00 AM", subject: "Chemistry" },
                 { day: "Friday", time: "01:00 PM", subject: "Sports" },
                 { day: "Friday", time: "12:00 PM", subject: "Lunch Break" },
-                // Add more here...
             ];
         }
 
-        // Populate header
+        // Build header
         times.forEach(time => {
-            $('#scheduleTable thead tr').append(`<th>${time}</th>`);
+            $('#scheduleTable thead tr').append(`<th class="bg-white text-secondary">${time}</th>`);
         });
 
-        // Populate body
+        // Build body
         weekdays.forEach(day => {
-            let row = `<tr><th class="table-light">${day}</th>`;
+            let row = `<tr><th class="text-start text-secondary fw-semibold">${day}</th>`;
             times.forEach(time => {
-                row += `<td data-day="${day}" data-time="${time}"></td>`;
+                row += `<td data-day="${day}" data-time="${time}" class="p-3"></td>`;
             });
             row += `</tr>`;
             $('#scheduleTable tbody').append(row);
         });
 
-        // Insert data from API
+        // Populate periods
         const schedule = fetchSchedule();
         schedule.forEach(entry => {
             const cell = $(`td[data-day="${entry.day}"][data-time="${entry.time}"]`);
             if (cell.length) {
                 if (entry.subject.toLowerCase().includes('break')) {
-                    cell.addClass('bg-warning fw-bold').text(entry.subject);
+                    cell.addClass('bg-warning-subtle text-warning-emphasis fw-semibold rounded').text(entry.subject);
                 } else {
-                    cell.addClass('bg-success text-white fw-semibold').text(entry.subject);
+                    cell.addClass('bg-success-subtle text-success-emphasis fw-semibold rounded').text(entry.subject);
                 }
             }
         });
