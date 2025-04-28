@@ -8,22 +8,14 @@
     // Dummy Data for Schedules (for each section)
     const schedules = {
         "CS101": [
-            { day: "Monday", time: "08:00 AM", subject: "CS Basics" },
-            { day: "Monday", time: "09:00 AM", subject: "Algorithms" },
-            { day: "Monday", time: "12:00 PM", subject: "Lunch Break" },
-            { day: "Tuesday", time: "08:00 AM", subject: "Networking" }
+            { "day": "Monday", "time": "08:00 AM", "subject": "CS Basics", "teacher": "Dr. John Doe" },
+            { "day": "Monday", "time": "09:00 AM", "subject": "Algorithms", "teacher": "Prof. Jane Smith" },
+            { "day": "Monday", "time": "12:00 PM", "subject": "Lunch Break", "teacher": "" },
+            { "day": "Tuesday", "time": "08:00 AM", "subject": "Networking", "teacher": "Mr. Alan Turing" }
         ],
         "MATH202": [
-            { day: "Tuesday", time: "08:00 AM", subject: "Calculus I" },
-            { day: "Wednesday", time: "10:00 AM", subject: "Linear Algebra" }
-        ],
-        "ENG301": [
-            { day: "Monday", time: "10:00 AM", subject: "English Literature" },
-            { day: "Thursday", time: "02:00 PM", subject: "Shakespearean Studies" }
-        ],
-        "BIO103": [
-            { day: "Wednesday", time: "09:00 AM", subject: "Biology 101" },
-            { day: "Friday", time: "01:00 PM", subject: "Introduction to Genetics" }
+            { "day": "Tuesday", "time": "08:00 AM", "subject": "Calculus I", "teacher": "Prof. Eva White" },
+            { "day": "Wednesday", "time": "10:00 AM", "subject": "Linear Algebra", "teacher": "Dr. Richard Black" }
         ]
     };
 
@@ -70,7 +62,13 @@
                     ? 'bg-warning-subtle text-warning-emphasis'
                     : 'bg-success-subtle text-success-emphasis';
 
-                cell.html(`<div class="${colorClass} fw-semibold rounded py-2 px-2 my-1">${entry.subject}</div>`);
+                const subjectHtml = `
+                    <div class="${colorClass} fw-semibold rounded py-2 px-2 my-1">
+                        ${entry.subject}
+                        ${entry.teacher ? `<div class="text-muted mt-1" style="font-size: 0.9rem;">${entry.teacher}</div>` : ''}
+                    </div>
+                `;
+                cell.html(subjectHtml);
             }
         });
     }
