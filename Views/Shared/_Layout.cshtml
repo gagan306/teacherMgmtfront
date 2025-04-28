@@ -27,6 +27,7 @@
                 <!-- Brand or Logo -->
                 <a class="navbar-brand ms-2" href="@Url.Action("GetSchedule", "GetSchedule")">MyApp</a>
 
+
                 <!-- Offcanvas Side Menu -->
                 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                     <div class="offcanvas-header">
@@ -45,7 +46,7 @@
                                 <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link disabled" tabindex="-1" aria-disabled="true">Disabled</a>
+                                <button class="btn btn-dark" id="toggleDarkMode">Toggle Dark Mode</button>
                             </li>
                         </ul>
                     </div>
