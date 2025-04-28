@@ -2,37 +2,52 @@
     const times = ["08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM"];
     const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-    // Fake API call for demonstration (Replace this with actual API call)
-    function fetchSchedule(sectionCode) {
-        // Example: based on section code, return different schedules
-        if (sectionCode === 'CS101') {
-            return [
-                { day: "Monday", time: "08:00 AM", subject: "CS Basics" },
-                { day: "Monday", time: "09:00 AM", subject: "Algorithms" },
-                { day: "Wednesday", time: "10:00 AM", subject: "Data Structures" },
-                { day: "Friday", time: "12:00 PM", subject: "Networking" }
-            ];
-        } else if (sectionCode === 'MATH202') {
-            return [
-                { day: "Tuesday", time: "08:00 AM", subject: "Calculus I" },
-                { day: "Thursday", time: "10:00 AM", subject: "Linear Algebra" }
-            ];
-        } else if (sectionCode === 'ENG301') {
-            return [
-                { day: "Monday", time: "11:00 AM", subject: "Literature" },
-                { day: "Wednesday", time: "09:00 AM", subject: "Composition" }
-            ];
-        }
-        return [];  // No schedule if no section is selected
+    // Dummy Data for Sections
+    const sections = ["CS101", "MATH202", "ENG301", "BIO103"];
+
+    // Dummy Data for Schedules (for each section)
+    const schedules = {
+        "CS101": [
+            { day: "Monday", time: "08:00 AM", subject: "CS Basics" },
+            { day: "Monday", time: "09:00 AM", subject: "Algorithms" },
+            { day: "Monday", time: "12:00 PM", subject: "Lunch Break" },
+            { day: "Tuesday", time: "08:00 AM", subject: "Networking" }
+        ],
+        "MATH202": [
+            { day: "Tuesday", time: "08:00 AM", subject: "Calculus I" },
+            { day: "Wednesday", time: "10:00 AM", subject: "Linear Algebra" }
+        ],
+        "ENG301": [
+            { day: "Monday", time: "10:00 AM", subject: "English Literature" },
+            { day: "Thursday", time: "02:00 PM", subject: "Shakespearean Studies" }
+        ],
+        "BIO103": [
+            { day: "Wednesday", time: "09:00 AM", subject: "Biology 101" },
+            { day: "Friday", time: "01:00 PM", subject: "Introduction to Genetics" }
+        ]
+    };
+
+    // Function to fetch available sections from the dummy data
+    function fetchSections() {
+        const sectionSelect = $('#sectionSelect');
+        // Populate the sections dropdown dynamically
+        sections.forEach(function (section) {
+            sectionSelect.append(`<option value="${section}">${section}</option>`);
+        });
     }
 
-    // Function to build the table dynamically
+    // Function to fetch schedule data for the selected section from the dummy data
+    function fetchSchedule(sectionCode) {
+        return schedules[sectionCode] || [];
+    }
+
+    // Function to build the schedule table dynamically
     function buildScheduleTable(schedule) {
-        // Clear the existing table
+        // Clear existing table
         $('#scheduleTable thead th:not(:first)').remove();
         $('#scheduleTable tbody').empty();
 
-        // Build header
+        // Build header (Time slots)
         times.forEach(time => {
             $('#scheduleTable thead tr').append(`<th class="bg-white text-secondary">${time}</th>`);
         });
@@ -60,7 +75,7 @@
         });
     }
 
-    // Fetch schedule when the section is selected
+    // Fetch schedule when section is selected
     $('#sectionSelect').on('change', function () {
         const sectionCode = $(this).val();
         if (sectionCode) {
@@ -71,6 +86,6 @@
         }
     });
 
-    // Initialize empty schedule (no section selected initially)
-    buildScheduleTable([]);
+    // Fetch available sections when the page loads
+    fetchSections();
 });
