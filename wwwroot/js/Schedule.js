@@ -86,4 +86,55 @@
 
     // Fetch available sections when the page loads
     fetchSections();
+    // When section is selected, show selected class code
+    $('#sectionSelect').on('change', function () {
+        const sectionCode = $(this).val();
+        $('#currentSection').text(sectionCode || 'None');
+
+        if (sectionCode) {
+            const schedule = fetchSchedule(sectionCode);
+            buildScheduleTable(schedule);
+        } else {
+            $('#scheduleTable tbody').empty();
+        }
+    });
+    $('#printBtn').on('click', printSchedule);
+    function printSchedule() {
+        const sectionCode = $('#sectionSelect').val();
+        if (!sectionCode) {
+            alert("Please select a section to print.");
+            return;
+        }
+
+        const printableWindow = window.open('', '_blank');
+        const tableHtml = $('#scheduleTable')[0].outerHTML;
+        const styles = `
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            h2 { text-align: center; margin-bottom: 20px; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+            th { background-color: #f8f9fa; }
+            .bg-success-subtle { background-color: #d1e7dd !important; color: #0f5132; }
+            .bg-warning-subtle { background-color: #fff3cd !important; color: #664d03; }
+        </style>
+    `;
+
+        printableWindow.document.write(`
+        <html>
+        <head>
+            <title>Print Schedule - ${sectionCode}</title>
+            ${styles}
+        </head>
+        <body>
+            <h2>Schedule for Class: ${sectionCode}</h2>
+            ${tableHtml}
+        </body>
+        </html>
+    `);
+
+        printableWindow.document.close();
+        printableWindow.focus();
+        printableWindow.print();
+    }
 });
