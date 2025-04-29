@@ -1,84 +1,131 @@
-﻿
-
-@{
-    ViewBag.Title = "Add Class Schedule";
+﻿@{
+    ViewBag.Title = "Manage Classes";
 }
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
 <div class="container py-4">
-    <h2>Add Class</h2>
-    <form asp-action="SaveClassSchedule" method="post" id="classForm">
-        <div class="row g-3 mb-3">
-            <div class="col-md-4">
-                <label class="form-label">Class Name</label>
-                <input type="text" name="ClassName" class="form-control" required />
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Faculty</label>
-                <input type="text" name="Faculty" class="form-control" required />
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Shift</label>
-                <select name="Shift" class="form-select" required>
-                    <option value="">Select Shift</option>
-                    <option value="Day">Day</option>
-                    <option value="Morning">Morning</option>
-                </select>
-            </div>
+    <h3>Add Class</h3>
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <input type="text" class="form-control" placeholder="Class Name" id="className" />
         </div>
-
-        <div class="row g-3 mb-3">
-            <div class="col-md-6">
-                <label class="form-label">Per Class Duration (mins)</label>
-                <input type="number" name="PerClassDuration" class="form-control" required />
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Break Duration (mins)</label>
-                <input type="number" name="BreakDuration" class="form-control" required />
-            </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" placeholder="Faculty" id="faculty" />
         </div>
-
-        <h4>Subjects</h4>
-        <table class="table table-bordered" id="subjectsTable">
-            <thead class="table-light">
-                <tr>
-                    <th>Time</th>
-                    <th>Subject Name</th>
-                    <th>Teacher Name</th>
-                    <th>Subsubject</th>
-                    <th>Subsubject Teacher</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="subjectsBody">
-                <!-- Subject rows will be appended here -->
-            </tbody>
-        </table>
-        <button type="button" class="btn btn-outline-primary" id="addSubjectBtn">Add Subject</button>
-
-        <div class="mt-4">
-            <button type="submit" class="btn btn-success">Save Schedule</button>
+        <div class="col-md-4">
+            <select class="form-select" id="shift">
+                <option value="">Select Shift</option>
+                <option value="Day">Day</option>
+                <option value="Morning">Morning</option>
+            </select>
         </div>
-    </form>
+        <div class="col-md-6">
+            <input type="number" class="form-control" placeholder="Per Class Duration (mins)" id="duration" />
+        </div>
+        <div class="col-md-6">
+            <input type="number" class="form-control" placeholder="Break Duration (mins)" id="breakDuration" />
+        </div>
+    </div>
+    <button class="btn btn-success mb-4" onclick="saveClass()">Save Class</button>
+
+    <h4>Class List</h4>
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Class Name</th>
+                <th>Faculty</th>
+                <th>Shift</th>
+                <th>Duration</th>
+                <th>Break</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="classTableBody">
+            <!-- Dummy data -->
+            <tr data-id="1">
+                <td>Math101</td>
+                <td>Science</td>
+                <td>Day</td>
+                <td>45</td>
+                <td>10</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editClass(1)">Edit</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteClass(1)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 <script>
-    document.getElementById('addSubjectBtn').addEventListener('click', function () {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td><input type="time" name="Subjects[][Time]" class="form-control" required /></td>
-            <td><input type="text" name="Subjects[][SubjectName]" class="form-control" required /></td>
-            <td><input type="text" name="Subjects[][TeacherName]" class="form-control" required /></td>
-            <td><input type="text" name="Subjects[][Subsubject]" class="form-control" /></td>
-            <td><input type="text" name="Subjects[][SubsubjectTeacher]" class="form-control" /></td>
-            <td><button type="button" class="btn btn-sm btn-danger remove-row">X</button></td>
-        `;
-        document.getElementById('subjectsBody').appendChild(row);
-    });
+    let classIdCounter = 2; // Start after dummy data
 
-    document.getElementById('subjectsTable').addEventListener('click', function (e) {
-        if (e.target.classList.contains('remove-row')) {
-            e.target.closest('tr').remove();
+    function saveClass() {
+        const className = document.getElementById('className').value;
+        const faculty = document.getElementById('faculty').value;
+        const shift = document.getElementById('shift').value;
+        const duration = document.getElementById('duration').value;
+        const breakDuration = document.getElementById('breakDuration').value;
+
+        if (!className || !faculty || !shift || !duration || !breakDuration) {
+            alert("Please fill all fields");
+            return;
         }
-    });
+
+        const newRow = `
+            <tr data-id="${classIdCounter}">
+                <td>${className}</td>
+                <td>${faculty}</td>
+                <td>${shift}</td>
+                <td>${duration}</td>
+                <td>${breakDuration}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editClass(${classIdCounter})">Edit</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteClass(${classIdCounter})">Delete</button>
+                </td>
+            </tr>`;
+
+        document.getElementById("classTableBody").insertAdjacentHTML('beforeend', newRow);
+
+        // Send data to backend via fetch
+        fetch('/Class/Save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ className, faculty, shift, duration, breakDuration })
+        });
+
+        classIdCounter++;
+
+        // Clear inputs
+        document.getElementById('className').value = '';
+        document.getElementById('faculty').value = '';
+        document.getElementById('shift').value = '';
+        document.getElementById('duration').value = '';
+        document.getElementById('breakDuration').value = '';
+    }
+
+    function editClass(id) {
+        const row = document.querySelector(`tr[data-id="${id}"]`);
+        const cells = row.querySelectorAll('td');
+
+        document.getElementById('className').value = cells[0].innerText;
+        document.getElementById('faculty').value = cells[1].innerText;
+        document.getElementById('shift').value = cells[2].innerText;
+        document.getElementById('duration').value = cells[3].innerText;
+        document.getElementById('breakDuration').value = cells[4].innerText;
+
+        row.remove(); // Remove old entry, will add new one with updated info on Save
+
+        // Optionally: update via backend
+        // fetch('/Class/Update', { ... });
+    }
+
+    function deleteClass(id) {
+        document.querySelector(`tr[data-id="${id}"]`).remove();
+
+        // Optionally: send delete request to backend
+        fetch(`/Class/Delete/${id}`, {
+            method: 'DELETE'
+        });
+    }
 </script>
