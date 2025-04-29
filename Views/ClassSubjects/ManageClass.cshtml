@@ -4,128 +4,65 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-<div class="container py-4">
-    <h3>Add Class</h3>
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="Class Name" id="className" />
+
+
+<div class="container py-5">
+    <div class="card p-4 mb-4">
+        <h3 class="mb-4">Add Class</h3>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <input type="text" class="form-control" placeholder="Class Name" id="className" />
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" placeholder="Faculty" id="faculty" />
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" id="shift">
+                    <option value="">Select Shift</option>
+                    <option value="Day">Day</option>
+                    <option value="Morning">Morning</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <input type="number" class="form-control" placeholder="Per Class Duration (mins)" id="duration" />
+            </div>
+            <div class="col-md-6">
+                <input type="number" class="form-control" placeholder="Break Duration (mins)" id="breakDuration" />
+            </div>
         </div>
-        <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="Faculty" id="faculty" />
-        </div>
-        <div class="col-md-4">
-            <select class="form-select" id="shift">
-                <option value="">Select Shift</option>
-                <option value="Day">Day</option>
-                <option value="Morning">Morning</option>
-            </select>
-        </div>
-        <div class="col-md-6">
-            <input type="number" class="form-control" placeholder="Per Class Duration (mins)" id="duration" />
-        </div>
-        <div class="col-md-6">
-            <input type="number" class="form-control" placeholder="Break Duration (mins)" id="breakDuration" />
+        <div class="mt-4">
+            <button class="btn btn-success px-4" onclick="saveClass()">Save Class</button>
         </div>
     </div>
-    <button class="btn btn-success mb-4" onclick="saveClass()">Save Class</button>
 
-    <h4>Class List</h4>
-    <table class="table table-bordered">
-        <thead class="table-light">
-            <tr>
-                <th>Class Name</th>
-                <th>Faculty</th>
-                <th>Shift</th>
-                <th>Duration</th>
-                <th>Break</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="classTableBody">
-            <!-- Dummy data -->
-            <tr data-id="1">
-                <td>Math101</td>
-                <td>Science</td>
-                <td>Day</td>
-                <td>45</td>
-                <td>10</td>
-                <td>
-                    <button class="btn btn-sm btn-primary" onclick="editClass(1)">Edit</button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteClass(1)">Delete</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="card p-4">
+        <h4 class="mb-4">Class List</h4>
+        <table class="table table-bordered align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Class Name</th>
+                    <th>Faculty</th>
+                    <th>Shift</th>
+                    <th>Duration</th>
+                    <th>Break</th>
+                    <th style="width: 150px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="classTableBody">
+                <!-- Dummy Data -->
+                <tr data-id="1">
+                    <td>Math101</td>
+                    <td>Science</td>
+                    <td>Day</td>
+                    <td>45</td>
+                    <td>10</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="editClass(1)">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteClass(1)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-<script>
-    let classIdCounter = 2; // Start after dummy data
-
-    function saveClass() {
-        const className = document.getElementById('className').value;
-        const faculty = document.getElementById('faculty').value;
-        const shift = document.getElementById('shift').value;
-        const duration = document.getElementById('duration').value;
-        const breakDuration = document.getElementById('breakDuration').value;
-
-        if (!className || !faculty || !shift || !duration || !breakDuration) {
-            alert("Please fill all fields");
-            return;
-        }
-
-        const newRow = `
-            <tr data-id="${classIdCounter}">
-                <td>${className}</td>
-                <td>${faculty}</td>
-                <td>${shift}</td>
-                <td>${duration}</td>
-                <td>${breakDuration}</td>
-                <td>
-                    <button class="btn btn-sm btn-primary" onclick="editClass(${classIdCounter})">Edit</button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteClass(${classIdCounter})">Delete</button>
-                </td>
-            </tr>`;
-
-        document.getElementById("classTableBody").insertAdjacentHTML('beforeend', newRow);
-
-        // Send data to backend via fetch
-        fetch('/Class/Save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ className, faculty, shift, duration, breakDuration })
-        });
-
-        classIdCounter++;
-
-        // Clear inputs
-        document.getElementById('className').value = '';
-        document.getElementById('faculty').value = '';
-        document.getElementById('shift').value = '';
-        document.getElementById('duration').value = '';
-        document.getElementById('breakDuration').value = '';
-    }
-
-    function editClass(id) {
-        const row = document.querySelector(`tr[data-id="${id}"]`);
-        const cells = row.querySelectorAll('td');
-
-        document.getElementById('className').value = cells[0].innerText;
-        document.getElementById('faculty').value = cells[1].innerText;
-        document.getElementById('shift').value = cells[2].innerText;
-        document.getElementById('duration').value = cells[3].innerText;
-        document.getElementById('breakDuration').value = cells[4].innerText;
-
-        row.remove(); // Remove old entry, will add new one with updated info on Save
-
-        // Optionally: update via backend
-        // fetch('/Class/Update', { ... });
-    }
-
-    function deleteClass(id) {
-        document.querySelector(`tr[data-id="${id}"]`).remove();
-
-        // Optionally: send delete request to backend
-        fetch(`/Class/Delete/${id}`, {
-            method: 'DELETE'
-        });
-    }
-</script>
+<script src="~/js/schedule.js"></script> 
