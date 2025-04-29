@@ -8,5 +8,9 @@ namespace teacherMgmtfront.Controllers
         {
             return View();
         }
+        public IActionResult ManageSubjects()
+        {
+            return View();
+        }
     }
 }
