@@ -1,5 +1,84 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
+
 @{
+    ViewBag.Title = "Add Class Schedule";
 }
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="container py-4">
+    <h2>Add Class</h2>
+    <form asp-action="SaveClassSchedule" method="post" id="classForm">
+        <div class="row g-3 mb-3">
+            <div class="col-md-4">
+                <label class="form-label">Class Name</label>
+                <input type="text" name="ClassName" class="form-control" required />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Faculty</label>
+                <input type="text" name="Faculty" class="form-control" required />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Shift</label>
+                <select name="Shift" class="form-select" required>
+                    <option value="">Select Shift</option>
+                    <option value="Day">Day</option>
+                    <option value="Morning">Morning</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Per Class Duration (mins)</label>
+                <input type="number" name="PerClassDuration" class="form-control" required />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Break Duration (mins)</label>
+                <input type="number" name="BreakDuration" class="form-control" required />
+            </div>
+        </div>
+
+        <h4>Subjects</h4>
+        <table class="table table-bordered" id="subjectsTable">
+            <thead class="table-light">
+                <tr>
+                    <th>Time</th>
+                    <th>Subject Name</th>
+                    <th>Teacher Name</th>
+                    <th>Subsubject</th>
+                    <th>Subsubject Teacher</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="subjectsBody">
+                <!-- Subject rows will be appended here -->
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-outline-primary" id="addSubjectBtn">Add Subject</button>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-success">Save Schedule</button>
+        </div>
+    </form>
+</div>
+<script>
+    document.getElementById('addSubjectBtn').addEventListener('click', function () {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><input type="time" name="Subjects[][Time]" class="form-control" required /></td>
+            <td><input type="text" name="Subjects[][SubjectName]" class="form-control" required /></td>
+            <td><input type="text" name="Subjects[][TeacherName]" class="form-control" required /></td>
+            <td><input type="text" name="Subjects[][Subsubject]" class="form-control" /></td>
+            <td><input type="text" name="Subjects[][SubsubjectTeacher]" class="form-control" /></td>
+            <td><button type="button" class="btn btn-sm btn-danger remove-row">X</button></td>
+        `;
+        document.getElementById('subjectsBody').appendChild(row);
+    });
+
+    document.getElementById('subjectsTable').addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-row')) {
+            e.target.closest('tr').remove();
+        }
+    });
+</script>
