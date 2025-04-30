@@ -9,5 +9,6 @@
         public string Department { get; set; }
         public string ClassType { get; set; }
 
+
     }
 }
