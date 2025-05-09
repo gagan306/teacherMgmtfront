@@ -32,7 +32,18 @@ function saveClass() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ className, faculty, shift, duration, breakDuration })
-    });
+    }).then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+    })
+        .then(data => {
+            alert("Class saved successfully!");
+            // Optional: reload table or reset form
+        })
+        .catch(error => {
+            console.error("Error saving class:", error);
+            alert("Failed to save class.");
+        });
 
     classIdCounter++;
 
