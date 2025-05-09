@@ -28,7 +28,7 @@ function saveClass() {
     document.getElementById("classTableBody").insertAdjacentHTML('beforeend', newRow);
 
     // Simulate sending data
-    fetch('/Class/Save', {
+    fetch('/Class/ClassSubjects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ className, faculty, shift, duration, breakDuration })

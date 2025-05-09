@@ -1,24 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using teacherMgmtfront.ViewModes;
+using teacherMgmtfront.ViewModels; 
 
 namespace teacherMgmtfront.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ClassSubjectsController : Controller
+   
+    public class ClassPageController : Controller
     {
-        public IActionResult ManageClass()
-        {
-            return View();
-        }
-        public IActionResult ManageSubjects()
-        {
-            return View();
-        }
+        public IActionResult ManageClass() => View();
+        public IActionResult ManageSubjects() => View();
+    }
+
+    public class ClassSubjectsController : ControllerBase
+    {
         [HttpPost]
         public IActionResult AddClass([FromBody] ClassDto newClass)
         {
-            // You now have access to ClassDto from the ViewModels folder
+            // You now have access to ClassDto from the ViewModels folder  
             return Ok(new { message = "Class saved successfully", classData = newClass });
         }
     }
