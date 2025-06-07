@@ -79,3 +79,33 @@
     // Initial load
     renderSubjects();
 });
+// Subjects.js
+$(document).ready(function () {
+    $('#subjectForm').on('submit', function (e) {
+        e.preventDefault(); // prevent page reload
+
+        const subjectData = {
+            SubjectCode: $('#subjectCode').val(),
+            SubjectName: $('#subjectName').val(),
+
+            CreditHours: $('#creditHours').val(),
+            Department: $('#department').val(),
+            ClassType: $('#classType').val()
+        };
+
+        $.ajax({
+            url: '/Subject/Add', // Your MVC controller endpoint
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(subjectData),
+            success: function (response) {
+                alert("Subject added successfully!");
+                // Optionally refresh table or clear form
+            },
+            error: function (err) {
+                console.error(err);
+                alert("Failed to add subject.");
+            }
+        });
+    });
+});

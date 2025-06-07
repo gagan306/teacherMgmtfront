@@ -12,10 +12,16 @@
     }
     public class ClassDto
     {
+        public int? ClassId { get; set; }
         public string ClassName { get; set; }
         public string Faculty { get; set; }
         public string Shift { get; set; }
         public int Duration { get; set; }
         public int BreakDuration { get; set; }
+        public string Batch { get; set; }
+
+        // Use string for TimeFrom and TimeTo for JSON compatibility
+        public string TimeFrom { get; set; }
+        public string TimeTo { get; set; }
     }
 }
