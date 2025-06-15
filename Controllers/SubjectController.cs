@@ -19,13 +19,21 @@ namespace teacherMgmtfront.Controllers
         public IActionResult Index() => View();
 
         [HttpPost]
+       
         public async Task<IActionResult> Add([FromBody] Subject subjectData)
         {
+            if (subjectData == null)
+                return BadRequest("Subject data is null.");
+
             var json = JsonSerializer.Serialize(subjectData);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
+
             var response = await _httpClient.PostAsync("api/SubjectsApi/Add", content);
-            return StatusCode((int)response.StatusCode);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            return Content(responseContent, "application/json");
         }
+
 
         [HttpDelete("Subject/Delete/{id}")]
         public async Task<IActionResult> Delete(int id)

@@ -1,35 +1,47 @@
-﻿// Subjects.js
-$(document).ready(function () {
+﻿$(document).ready(function () {
     loadSubjects();
+
+    const currentYear = new Date().getFullYear();
+    const batchSelect = $('#batch');
+    for (let year = currentYear; year <= currentYear + 5; year++) {
+        batchSelect.append(`<option value="${year}">${year}</option>`);
+    }
+
+    $('#hasSubYes').change(() => $('#subSubjectCountDiv').show());
+    $('#hasSubNo').change(() => {
+        $('#subSubjectCountDiv').hide();
+        $('#subSubjectCount').val('');
+    });
 
     $('#subjectForm').on('submit', function (e) {
         e.preventDefault();
 
         const subjectData = {
-            subjectCode: $('#subjectCode').val(),
-            subjectName: $('#subjectName').val(),
-            creditHours: $('#creditHours').val(),
-            department: $('#department').val(),
-            batch: $('#batch').val(),
-            classType: $('#classType').val(),
-            faculty: $('#faculty').val(),
-            hasSubSubjects: $('#hasSubSubjects').is(':checked'),
-            subSubjectCount: parseInt($('#subSubjectCount').val()) || 0
+            SubjectCode: $("#subjectCode").val(),
+            SubjectName: $("#subjectName").val(),
+            CreditHours: $("#creditHours").val(),
+            Department: $("#department").val(),
+            Batch: $("#batch").val(),
+            ClassType: $("#classType").val(),
+            Faculty: $("#faculty").val(),
+            HasSubSubjects: $("#hasSubSubjects").is(":checked"),
+            SubSubjectCount: parseInt($("#subSubjectCount").val()) || 0
         };
 
+        console.log("Sending data:", subjectData);
+
         $.ajax({
-            url: '/Subject/Add',
-            type: 'POST',
-            contentType: 'application/json',
+            url: "/Subject/Add",
+            method: "POST",
+            contentType: "application/json",
             data: JSON.stringify(subjectData),
-            success: function () {
-                alert("Subject added successfully!");
-                $('#subjectForm')[0].reset();
-                loadSubjects();
+            success: function (res) {
+                console.log("Success:", res);
+                alert("Subject added successfully");
             },
-            error: function (err) {
-                console.error(err);
-                alert("Failed to add subject.");
+            error: function (xhr) {
+                console.error("Error:", xhr);
+                alert("Failed to add subject. Check console for details.");
             }
         });
     });
@@ -43,7 +55,7 @@ function loadSubjects() {
             const tbody = $('#subjectsTable tbody');
             tbody.empty();
             subjects.forEach(subj => {
-                const row = `
+                tbody.append(`
                     <tr>
                         <td>${subj.subjectCode}</td>
                         <td>${subj.subjectName}</td>
@@ -55,8 +67,7 @@ function loadSubjects() {
                             <button class="btn btn-sm btn-outline-primary" onclick="editSubject('${subj.subjectId}')">Edit</button>
                             <button class="btn btn-sm btn-outline-danger" onclick="deleteSubject('${subj.subjectId}')">Delete</button>
                         </td>
-                    </tr>`;
-                tbody.append(row);
+                    </tr>`);
             });
         },
         error: function () {
@@ -93,26 +104,17 @@ function editSubject(id) {
             $('#batch').val(subj.batch);
             $('#classType').val(subj.classType);
             $('#faculty').val(subj.faculty);
-            $('#hasSubSubjects').prop('checked', subj.hasSubSubjects);
-            $('#subSubjectCount').val(subj.subSubjectCount);
+
+            if (subj.hasSubSubjects) {
+                $('#hasSubYes').prop('checked', true).trigger('change');
+                $('#subSubjectCount').val(subj.subSubjectCount);
+            } else {
+                $('#hasSubNo').prop('checked', true).trigger('change');
+                $('#subSubjectCount').val('');
+            }
         },
         error: function () {
             alert("Failed to fetch subject.");
         }
     });
 }
-document.addEventListener("DOMContentLoaded", function () {
-        const currentYear = new Date().getFullYear();
-        const batchSelect = document.getElementById("Batch");
-
-        // Clear existing options
-        batchSelect.innerHTML = "";
-
-        // Generate next 6 years including current year
-        for (let year = currentYear; year <= currentYear + 5; year++) {
-            const option = document.createElement("option");
-            option.value = year;
-            option.textContent = year;
-            batchSelect.appendChild(option);
-        }
-    });

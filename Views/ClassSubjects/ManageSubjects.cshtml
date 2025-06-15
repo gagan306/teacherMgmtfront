@@ -9,11 +9,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body class="bg-light">
-
     <div class="container mt-5">
         <h3 class="text-center mb-4 fw-bold">Subject Management</h3>
 
-        <!-- Form -->
         <div class="card shadow-sm mb-4">
             <div class="card-body">
                 <form id="subjectForm">
@@ -28,23 +26,18 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Credit Hours</label>
-                            <input type="text" class="form-control" id="creditHours" placeholder="e.g. 1.5 or 3" required />
+                            <input type="text" class="form-control" id="creditHours" required />
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Batch</label>
-                            <select class="form-control" id="Batch" required>
-                                <option value="2025">2025</option>
-                                <option value="2026">2026</option>
-                                <option value="2027">2027</option>
-                            </select>
+                            <select class="form-control" id="batch" required></select>
                         </div>
-
                         <div class="col-md-6">
                             <label class="form-label">Department</label>
                             <select class="form-select" id="department" required>
                                 <option value="Physics">Physics</option>
-                                <option value="Management">Management</option> 
-                                <option value="chemistry">chemistry</option>
+                                <option value="Management">Management</option>
+                                <option value="Chemistry">Chemistry</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -63,21 +56,22 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-4">
+
+                    <div class="col-md-4 mt-3">
                         <label class="form-label d-block">Has Sub Subjects?</label>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="hasSubSubjects" id="hasSubYes" value="yes" />
+                            <input class="form-check-input" type="radio" name="hasSubSubjects" id="hasSubYes" />
                             <label class="form-check-label" for="hasSubYes">Yes</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="hasSubSubjects" id="hasSubNo" value="no" checked />
+                            <input class="form-check-input" type="radio" name="hasSubSubjects" id="hasSubNo" checked />
                             <label class="form-check-label" for="hasSubNo">No</label>
                         </div>
                     </div>
 
-                    <div class="col-md-4" id="subSubjectCountDiv" style="display: none;">
+                    <div class="col-md-4 mt-2" id="subSubjectCountDiv" style="display: none;">
                         <label class="form-label">No. of Sub Subjects</label>
-                        <input type="number" min="1" class="form-control" id="subSubjectCount" placeholder="e.g. 2" />
+                        <input type="number" min="1" class="form-control" id="subSubjectCount" />
                     </div>
 
                     <div class="text-end mt-4">
@@ -87,8 +81,7 @@
             </div>
         </div>
 
-        <!-- Table -->
-        <div class="card shadow-sm" style="margin-bottom: auto;">
+        <div class="card shadow-sm mb-5">
             <div class="card-body table-responsive">
                 <table class="table table-bordered align-middle text-center mb-0" id="subjectsTable">
                     <thead class="table-light">
@@ -98,11 +91,12 @@
                             <th>Credit Hours</th>
                             <th>Department</th>
                             <th>Class Type</th>
+                            <th>Faculty</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Populated via JavaScript -->
+                        <!-- JS will inject rows -->
                     </tbody>
                 </table>
             </div>
@@ -110,51 +104,6 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="~/js/Subjects.js"></script>
-    <script>
-        //        document.addEventListener("DOMContentLoaded", function () {
-        //     const currentYear = new Date().getFullYear();
-        //     const batchSelect = document.getElementById("Batch");
-
-        //     // Clear existing options
-        //     batchSelect.innerHTML = "";
-
-        //     // Generate next 6 years including current year
-        //     for (let year = currentYear; year <= currentYear + 5; year++) {
-        //         const option = document.createElement("option");
-        //         option.value = year;
-        //         option.textContent = year;
-        //         batchSelect.appendChild(option);
-        //     }
-        // });
-            //     document.addEventListener("DOMContentLoaded", function () {
-            // // Batch year population
-            // const currentYear = new Date().getFullYear();
-            // const batchSelect = document.getElementById("Batch");
-            // batchSelect.innerHTML = "";
-            // for (let year = currentYear; year <= currentYear + 5; year++) {
-            //     const option = document.createElement("option");
-            //     option.value = year;
-            //     option.textContent = year;
-            //     batchSelect.appendChild(option);
-            // }
-
-            // Sub-subject toggle logic
-            const hasSubYes = document.getElementById("hasSubYes");
-            const hasSubNo = document.getElementById("hasSubNo");
-            const subSubjectDiv = document.getElementById("subSubjectCountDiv");
-
-            hasSubYes.addEventListener("change", function () {
-                subSubjectDiv.style.display = "block";
-            });
-
-            hasSubNo.addEventListener("change", function () {
-                subSubjectDiv.style.display = "none";
-                document.getElementById("subSubjectCount").value = ""; // Clear input if hidden
-            });
-        });
-
-    </script>
-
+    <script src="~/js/Subjects.js"></script> <!-- Your external JS -->
 </body>
 </html>
