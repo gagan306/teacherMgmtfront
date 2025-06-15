@@ -1,106 +1,31 @@
-﻿$(document).ready(function () {
-    const departments = ["Computer Science", "Mathematics", "Physics", "Biology"];
-    const subjects = [
-        {
-            subjectCode: "CS101",
-            subjectName: "Intro to CS",
-            creditHours: "3",
-            department: "Computer Science",
-            classType: "Lecture"
-        },
-        {
-            subjectCode: "PHY201",
-            subjectName: "Thermodynamics",
-            creditHours: "2",
-            department: "Physics",
-            classType: "Lab"
-        }
-    ];
+﻿// Subjects.js
+$(document).ready(function () {
+    loadSubjects();
 
-    // Populate departments dropdown
-    departments.forEach(dep => {
-        $('#department').append(`<option value="${dep}">${dep}</option>`);
-    });
-
-    // Render subjects table
-    function renderSubjects() {
-        const tbody = $('#subjectsTable tbody');
-        tbody.empty();
-        subjects.forEach((subj, index) => {
-            const row = `
-                <tr>
-                    <td>${subj.subjectCode}</td>
-                    <td>${subj.subjectName}</td>
-                    <td>${subj.creditHours}</td>
-                    <td>${subj.department}</td>
-                    <td>${subj.classType}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-primary me-2" onclick="editSubject(${index})">Edit</button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteSubject(${index})">Delete</button>
-                    </td>
-                </tr>`;
-            tbody.append(row);
-        });
-    }
-
-    // Add new subject
     $('#subjectForm').on('submit', function (e) {
         e.preventDefault();
-        const newSubject = {
+
+        const subjectData = {
             subjectCode: $('#subjectCode').val(),
             subjectName: $('#subjectName').val(),
             creditHours: $('#creditHours').val(),
             department: $('#department').val(),
-            classType: $('#classType').val()
-        };
-        subjects.push(newSubject);
-        this.reset();
-        renderSubjects();
-    });
-
-    // Expose globally for buttons
-    window.editSubject = function (index) {
-        const subj = subjects[index];
-        $('#subjectCode').val(subj.subjectCode);
-        $('#subjectName').val(subj.subjectName);
-        $('#creditHours').val(subj.creditHours);
-        $('#department').val(subj.department);
-        $('#classType').val(subj.classType);
-        subjects.splice(index, 1); // remove to prevent duplicate
-    };
-
-    window.deleteSubject = function (index) {
-        if (confirm("Are you sure you want to delete this subject?")) {
-            subjects.splice(index, 1);
-            renderSubjects();
-        }
-    };
-
-    // Initial load
-    renderSubjects();
-});
-// Subjects.js
-$(document).ready(function () {
-    $('#subjectForm').on('submit', function (e) {
-        e.preventDefault(); // prevent page reload
-
-        const subjectData = {
-            SubjectCode: $('#subjectCode').val(),
-            SubjectName: $('#subjectName').val(),
-
-            CreditHours: $('#creditHours').val(),
-            Department: $('#department').val(),
-            ClassType: $('#classType').val()
+            batch: $('#batch').val(),
+            classType: $('#classType').val(),
+            faculty: $('#faculty').val(),
+            hasSubSubjects: $('#hasSubSubjects').is(':checked'),
+            subSubjectCount: parseInt($('#subSubjectCount').val()) || 0
         };
 
         $.ajax({
-            url: '/Subject/Add', // Your MVC controller endpoint
+            url: '/Subject/Add',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(subjectData),
-            success: function (response) {
+            success: function () {
                 alert("Subject added successfully!");
-                // Optionally refresh table or clear form
+                $('#subjectForm')[0].reset();
+                loadSubjects();
             },
             error: function (err) {
                 console.error(err);
@@ -109,3 +34,85 @@ $(document).ready(function () {
         });
     });
 });
+
+function loadSubjects() {
+    $.ajax({
+        url: '/Subject/List',
+        type: 'GET',
+        success: function (subjects) {
+            const tbody = $('#subjectsTable tbody');
+            tbody.empty();
+            subjects.forEach(subj => {
+                const row = `
+                    <tr>
+                        <td>${subj.subjectCode}</td>
+                        <td>${subj.subjectName}</td>
+                        <td>${subj.creditHours}</td>
+                        <td>${subj.department}</td>
+                        <td>${subj.classType}</td>
+                        <td>${subj.faculty}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="editSubject('${subj.subjectId}')">Edit</button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteSubject('${subj.subjectId}')">Delete</button>
+                        </td>
+                    </tr>`;
+                tbody.append(row);
+            });
+        },
+        error: function () {
+            alert("Failed to load subjects.");
+        }
+    });
+}
+
+function deleteSubject(id) {
+    if (!confirm("Are you sure you want to delete this subject?")) return;
+
+    $.ajax({
+        url: `/Subject/Delete/${id}`,
+        type: 'DELETE',
+        success: function () {
+            alert("Subject deleted.");
+            loadSubjects();
+        },
+        error: function () {
+            alert("Failed to delete subject.");
+        }
+    });
+}
+
+function editSubject(id) {
+    $.ajax({
+        url: `/Subject/Get/${id}`,
+        type: 'GET',
+        success: function (subj) {
+            $('#subjectCode').val(subj.subjectCode);
+            $('#subjectName').val(subj.subjectName);
+            $('#creditHours').val(subj.creditHours);
+            $('#department').val(subj.department);
+            $('#batch').val(subj.batch);
+            $('#classType').val(subj.classType);
+            $('#faculty').val(subj.faculty);
+            $('#hasSubSubjects').prop('checked', subj.hasSubSubjects);
+            $('#subSubjectCount').val(subj.subSubjectCount);
+        },
+        error: function () {
+            alert("Failed to fetch subject.");
+        }
+    });
+}
+document.addEventListener("DOMContentLoaded", function () {
+        const currentYear = new Date().getFullYear();
+        const batchSelect = document.getElementById("Batch");
+
+        // Clear existing options
+        batchSelect.innerHTML = "";
+
+        // Generate next 6 years including current year
+        for (let year = currentYear; year <= currentYear + 5; year++) {
+            const option = document.createElement("option");
+            option.value = year;
+            option.textContent = year;
+            batchSelect.appendChild(option);
+        }
+    });

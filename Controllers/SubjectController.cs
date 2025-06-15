@@ -3,38 +3,51 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using teacherMgmtfront.Models; // adjust based on your folder structure
+using teacherMgmtfront.Models;
 
 namespace teacherMgmtfront.Controllers
 {
     public class SubjectController : Controller
     {
-        public IActionResult Index()
+        private readonly HttpClient _httpClient;
+
+        public SubjectController()
         {
-            return View();
+            _httpClient = new HttpClient { BaseAddress = new Uri("https://localhost:7008/") }; // Update port if needed
         }
 
+        public IActionResult Index() => View();
+
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Subject subject)
+        public async Task<IActionResult> Add([FromBody] Subject subjectData)
         {
-            if (!ModelState.IsValid)
-                return BadRequest("Invalid data");
+            var json = JsonSerializer.Serialize(subjectData);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync("api/SubjectsApi/Add", content);
+            return StatusCode((int)response.StatusCode);
+        }
 
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://localhost:7008/api/SubjectsApi"); // change this
+        [HttpDelete("Subject/Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var response = await _httpClient.DeleteAsync($"api/SubjectsApi/Delete/{id}");
+            return StatusCode((int)response.StatusCode);
+        }
 
-                var json = JsonSerializer.Serialize(subject);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+        [HttpGet("Subject/Get/{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var response = await _httpClient.GetAsync($"api/SubjectsApi/{id}");
+            var content = await response.Content.ReadAsStringAsync();
+            return Content(content, "application/json");
+        }
 
-                var response = await client.PostAsync("api/subjects", content); // change endpoint as needed
-
-                if (response.IsSuccessStatusCode)
-                    return Ok(new { message = "Subject added successfully" });
-                
-                else
-                    return StatusCode((int)response.StatusCode, "Failed to add subject");
-            }
+        [HttpGet("Subject/List")]
+        public async Task<IActionResult> List()
+        {
+            var response = await _httpClient.GetAsync("api/SubjectsApi/List");
+            var content = await response.Content.ReadAsStringAsync();
+            return Content(content, "application/json");
         }
     }
 }
