@@ -49,6 +49,21 @@ namespace teacherMgmtfront.Controllers
             var content = await response.Content.ReadAsStringAsync();
             return Content(content, "application/json");
         }
+        [HttpPut("Subject/Update/{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] Subject subjectData)
+        {
+            if (subjectData == null)
+                return BadRequest("Subject data is null.");
+
+            var json = JsonSerializer.Serialize(subjectData);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PutAsync($"api/SubjectsApi/Update/{id}", content);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            return Content(responseContent, "application/json");
+        }
+
 
         [HttpGet("Subject/List")]
         public async Task<IActionResult> List()

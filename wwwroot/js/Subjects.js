@@ -97,24 +97,57 @@ function editSubject(id) {
         url: `/Subject/Get/${id}`,
         type: 'GET',
         success: function (subj) {
-            $('#subjectCode').val(subj.subjectCode);
-            $('#subjectName').val(subj.subjectName);
-            $('#creditHours').val(subj.creditHours);
-            $('#department').val(subj.department);
-            $('#batch').val(subj.batch);
-            $('#classType').val(subj.classType);
-            $('#faculty').val(subj.faculty);
+            $("#editSubjectId").val(subj.subjectId);
+            $("#editSubjectCode").val(subj.subjectCode);
+            $("#editSubjectName").val(subj.subjectName);
+            $("#editCreditHours").val(subj.creditHours);
+            $("#editDepartment").val(subj.department);
+            $("#editBatch").val(subj.batch);
+            $("#editClassType").val(subj.classType);
+            $("#editFaculty").val(subj.faculty);
+            $("#editHasSubSubjects").val(subj.hasSubSubjects.toString());
+            $("#editSubSubjectCount").val(subj.subSubjectCount);
 
-            if (subj.hasSubSubjects) {
-                $('#hasSubYes').prop('checked', true).trigger('change');
-                $('#subSubjectCount').val(subj.subSubjectCount);
-            } else {
-                $('#hasSubNo').prop('checked', true).trigger('change');
-                $('#subSubjectCount').val('');
-            }
+            const modal = new bootstrap.Modal(document.getElementById('editSubjectModal'));
+            modal.show();
         },
         error: function () {
             alert("Failed to fetch subject.");
         }
     });
 }
+
+$("#editSubjectForm").on("submit", function (e) {
+    e.preventDefault();
+
+    const id = $("#editSubjectId").val();
+
+    const updatedSubject = {
+        SubjectCode: $("#editSubjectCode").val(),
+        SubjectName: $("#editSubjectName").val(),
+        CreditHours: $("#editCreditHours").val(),
+        Department: $("#editDepartment").val(),
+        Batch: $("#editBatch").val(),
+        ClassType: $("#editClassType").val(),
+        Faculty: $("#editFaculty").val(),
+        HasSubSubjects: $("#editHasSubSubjects").val() === "true",
+        SubSubjectCount: parseInt($("#editSubSubjectCount").val()) || 0
+    };
+
+    $.ajax({
+        url: `/Subject/Update/${id}`,
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(updatedSubject),
+        success: function () {
+            alert("Subject updated successfully.");
+            const modalEl = document.getElementById('editSubjectModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+            loadSubjects();
+        },
+        error: function () {
+            alert("Failed to update subject.");
+        }
+    });
+});

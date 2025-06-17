@@ -102,6 +102,68 @@
             </div>
         </div>
     </div>
+    <!-- Edit Subject Modal -->
+    <div class="modal fade" id="editSubjectModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="editSubjectForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Subject</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body row g-3 px-3">
+                        <input type="hidden" id="editSubjectId" />
+
+                        <div class="col-md-6">
+                            <label class="form-label">Subject Code</label>
+                            <input type="text" class="form-control" id="editSubjectCode" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Subject Name</label>
+                            <input type="text" class="form-control" id="editSubjectName" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Credit Hours</label>
+                            <input type="text" class="form-control" id="editCreditHours" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Batch</label>
+                            <input type="text" class="form-control" id="editBatch" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Department</label>
+                            <input type="text" class="form-control" id="editDepartment" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Class Type</label>
+                            <input type="text" class="form-control" id="editClassType" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Faculty</label>
+                            <input type="text" class="form-control" id="editFaculty" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Has Sub Subjects</label>
+                            <select class="form-select" id="editHasSubSubjects">
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Sub Subject Count</label>
+                            <input type="number" class="form-control" id="editSubSubjectCount" min="0" />
+                        </div>
+                    </div>
+                    <div class="modal-footer px-3">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update Subject</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="~/js/Subjects.js"></script> <!-- Your external JS -->
